@@ -1,6 +1,5 @@
 package com.ngopidevteam.pranadana.metime.Adapter;
 
-import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -14,12 +13,12 @@ import com.ngopidevteam.pranadana.metime.fragment.HistoryWH;
 
 import java.util.List;
 
-public class AdapterData extends RecyclerView.Adapter<AdapterData.HolderData> {
+public class AdapterDataWH extends RecyclerView.Adapter<AdapterDataWH.HolderData> {
 
     private List<ModelData> mItems;
     private HistoryWH context;
 
-    public AdapterData (HistoryWH context, List<ModelData> items){
+    public AdapterDataWH(HistoryWH context, List<ModelData> items){
         this.context = context;
         this.mItems = items;
     }
@@ -35,6 +34,7 @@ public class AdapterData extends RecyclerView.Adapter<AdapterData.HolderData> {
     @Override
     public void onBindViewHolder(@NonNull HolderData holderData, int position) {
         ModelData md = mItems.get(position);
+        holderData.textTanggal.setText(md.getTanggal());
         holderData.textMulai.setText(md.getJamMulai());
         holderData.textSelesai.setText(md.getJamSelesai());
     }
@@ -45,12 +45,13 @@ public class AdapterData extends RecyclerView.Adapter<AdapterData.HolderData> {
     }
 
     class HolderData extends RecyclerView.ViewHolder{
-        TextView textMulai, textSelesai;
+        TextView textTanggal, textMulai, textSelesai;
 
 
         public HolderData(@NonNull View itemView) {
             super(itemView);
 
+            textTanggal = itemView.findViewById(R.id.iniTanggal);
             textMulai = itemView.findViewById(R.id.iniJamMulai);
             textSelesai = itemView.findViewById(R.id.iniJamSelesai);
         }

@@ -11,16 +11,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.ngopidevteam.pranadana.metime.Adapter.AdapterData;
+import com.ngopidevteam.pranadana.metime.Adapter.AdapterDataWH;
 import com.ngopidevteam.pranadana.metime.Model.ModelData;
 import com.ngopidevteam.pranadana.metime.R;
 import com.ngopidevteam.pranadana.metime.Util.AppController;
-import com.ngopidevteam.pranadana.metime.Util.ServerAPI;
+import com.ngopidevteam.pranadana.metime.Util.APIWH;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -43,13 +44,13 @@ public class HistoryWH extends Fragment {
 
         mRecycleView = v.findViewById(R.id.recViewWH);
         mItems = new ArrayList<>();
-        pd = new ProgressDialog(getContext());
+        pd = new ProgressDialog(getActivity());
 
         loadJson();
 
-        mManager = new LinearLayoutManager (getContext(), LinearLayoutManager.VERTICAL, false);
+        mManager = new LinearLayoutManager (getActivity(), LinearLayoutManager.VERTICAL, false);
         mRecycleView.setLayoutManager(mManager);
-        mAdapter = new AdapterData(HistoryWH.this, mItems);
+        mAdapter = new AdapterDataWH(HistoryWH.this, mItems);
         mRecycleView.setAdapter(mAdapter);
 
         return v;
@@ -60,7 +61,7 @@ public class HistoryWH extends Fragment {
         pd.setCancelable(false);
         pd.show();
 
-        JsonArrayRequest reqData = new JsonArrayRequest(Request.Method.POST, ServerAPI.URL_DATA, null,
+        JsonArrayRequest reqData = new JsonArrayRequest(Request.Method.POST, APIWH.URL_DATA, null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
@@ -70,6 +71,7 @@ public class HistoryWH extends Fragment {
                             try {
                                 JSONObject data = response.getJSONObject(i);
                                 ModelData md = new ModelData();
+                                md.setTanggal(data.getString("tanggal"));
                                 md.setJamMulai(data.getString("jam_mulai"));
                                 md.setJamSelesai(data.getString("jam_selesai"));
                                 mItems.add(md);
@@ -84,6 +86,7 @@ public class HistoryWH extends Fragment {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         pd.cancel();
+//                        Toast.makeText(getActivity(), "Tidak dapat terkoneksi", Toast.LENGTH_SHORT).show();
                         Log.d("volley", "error : " + error.getMessage());
                     }
                 });

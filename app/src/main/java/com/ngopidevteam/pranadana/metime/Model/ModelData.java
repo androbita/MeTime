@@ -1,14 +1,23 @@
 package com.ngopidevteam.pranadana.metime.Model;
 
 public class ModelData {
-    String jamMulai, jamSelesai;
+    private String tanggal, jamMulai, jamSelesai;
 
     public ModelData() {
     }
 
-    public ModelData(String jamMulai, String jamSelesai) {
+    public ModelData(String tanggal, String jamMulai, String jamSelesai) {
+        this.tanggal = tanggal;
         this.jamMulai = jamMulai;
         this.jamSelesai = jamSelesai;
+    }
+
+    public String getTanggal() {
+        return tanggal;
+    }
+
+    public void setTanggal(String tanggal) {
+        this.tanggal = tanggal;
     }
 
     public String getJamMulai() {

@@ -1,8 +1,10 @@
 package com.ngopidevteam.pranadana.metime;
 
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
+//import android.support.design.widget.FloatingActionButton;
+//import android.support.design.widget.Snackbar;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.TabLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -20,9 +22,9 @@ import android.view.ViewGroup;
 
 import android.widget.TextView;
 
+import com.ngopidevteam.pranadana.metime.fragment.HistoryMT;
 import com.ngopidevteam.pranadana.metime.fragment.HistoryWH;
 import com.ngopidevteam.pranadana.metime.fragment.HistoryFT;
-import com.ngopidevteam.pranadana.metime.fragment.HistoryMT;
 
 public class History extends AppCompatActivity {
 
@@ -44,10 +46,12 @@ public class History extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_history);
+        setContentView(R.layout.layout_history);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setLogo(R.drawable.work);
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -56,17 +60,29 @@ public class History extends AppCompatActivity {
         mViewPager = (ViewPager) findViewById(R.id.container);
         mViewPager.setAdapter(mSectionsPagerAdapter);
 
-        TabLayout tabLayout = findViewById(R.id.tabs);
+        final TabLayout tabLayout = findViewById(R.id.tabs);
 
         mViewPager.addOnPageChangeListener(new TabLayout.TabLayoutOnPageChangeListener(tabLayout));
         tabLayout.addOnTabSelectedListener(new TabLayout.ViewPagerOnTabSelectedListener(mViewPager));
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.btn_add);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
+            public void onClick(View v) {
+                int position = tabLayout.getSelectedTabPosition();
+                if (position == 0){
+                    Intent moveWH = new Intent(History.this, AmbilJam.class);
+                    moveWH.putExtra("tab", "0");
+                    startActivity(moveWH);
+                }else if (position == 1){
+                    Intent moveFT = new Intent(History.this, AmbilJam.class);
+                    moveFT.putExtra("tab", "1");
+                    startActivity(moveFT);
+                }else if (position == 2){
+                    Intent moveMT = new Intent(History.this, AmbilJam.class);
+                    moveMT.putExtra("tab", "2");
+                    startActivity(moveMT);
+                }
             }
         });
 
@@ -146,6 +162,7 @@ public class History extends AppCompatActivity {
             // Return a PlaceholderFragment (defined as a static inner class below).
 //            return PlaceholderFragment.newInstance(position + 1);
             Fragment fragment = null;
+
             switch (position){
                 case 0:
                     fragment = new HistoryWH();
