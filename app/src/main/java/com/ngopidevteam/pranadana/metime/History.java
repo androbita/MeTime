@@ -26,6 +26,8 @@ import com.ngopidevteam.pranadana.metime.fragment.HistoryMT;
 import com.ngopidevteam.pranadana.metime.fragment.HistoryWH;
 import com.ngopidevteam.pranadana.metime.fragment.HistoryFT;
 
+import static com.ngopidevteam.pranadana.metime.LoginRegister.prefConfig;
+
 public class History extends AppCompatActivity {
 
     /**
@@ -42,6 +44,11 @@ public class History extends AppCompatActivity {
      * The {@link ViewPager} that will host the section contents.
      */
     private ViewPager mViewPager;
+    OnLogoutListener onLogoutListener;
+
+    public interface OnLogoutListener{
+        public void logoutPerformed();
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +59,7 @@ public class History extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
         getSupportActionBar().setLogo(R.drawable.work);
+//        getSupportActionBar().setTitle(prefConfig.readUsername());
         // Create the adapter that will return a fragment for each of the three
         // primary sections of the activity.
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
@@ -92,7 +100,7 @@ public class History extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-//        getMenuInflater().inflate(R.menu.menu_history, menu);
+        getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
 
@@ -104,9 +112,15 @@ public class History extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-//        if (id == R.id.action_settings) {
-//            return true;
-//        }
+        if (id == R.id.action_logout) {
+//            onLogoutListener.logoutPerformed();
+            prefConfig.writeLoginStatus(false);
+            prefConfig.writeName("User");
+            prefConfig.writeUsername("User");
+            Intent login = new Intent(History.this, LoginRegister.class);
+            startActivity(login);
+            finish();
+        }
 
         return super.onOptionsItemSelected(item);
     }
@@ -183,4 +197,10 @@ public class History extends AppCompatActivity {
             return 3;
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        finishAffinity();
+    }
+
 }

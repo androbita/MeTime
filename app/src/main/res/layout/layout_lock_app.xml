@@ -5,11 +5,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:theme="@android:style/Theme.NoTitleBar.Fullscreen"
     tools:context=".LockApp"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@drawable/background">
 
     <AnalogClock
         android:id="@+id/iconJam"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -20,7 +21,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_weight="3">
 
         <LinearLayout
             android:id="@+id/waktuMulai"
@@ -37,6 +38,7 @@
                 android:layout_gravity="center"
                 android:text="Jam Mulai"
                 android:textSize="30dp"
+                android:textColor="@android:color/black"
                 />
 
             <TextView
@@ -46,6 +48,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:textSize="30dp"
+                android:textColor="@android:color/black"
                 />
         </LinearLayout>
 
@@ -53,7 +56,7 @@
             android:id="@+id/llwaktuMulai"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="3"
             android:orientation="vertical">
 
             <TextView
@@ -63,7 +66,8 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:text="Jam Selesai"
-                android:textSize="30dp"/>
+                android:textSize="30dp"
+                android:textColor="@android:color/black"/>
 
             <TextView
                 android:id="@+id/jamSelesai"
@@ -72,6 +76,7 @@
                 android:layout_weight="1"
                 android:layout_gravity="center"
                 android:textSize="30dp"
+                android:textColor="@android:color/black"
                 />
         </LinearLayout>
     </LinearLayout>
@@ -81,8 +86,25 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_weight="1"
+        android:layout_weight="2"
         android:text="LOCK APP \n Let's Do It :)"
-        android:textSize="50dp"/>
+        android:textSize="50dp"
+        android:textColor="@android:color/black"/>
+
+    <TextView
+        android:id="@+id/textJam"
+        android:textSize="20dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/btn_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="STOP"
+        android:layout_weight="0.25"
+        android:visibility="gone"/>
 
 </LinearLayout>

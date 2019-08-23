@@ -37,15 +37,19 @@ public class AmbilJam extends AppCompatActivity {
 
         RelativeLayout rl = findViewById(R.id.layoutAmbilJam);
 
-        if (numTab.equals("0")){
-            rl.setBackgroundResource(R.drawable.familytime);
-            textTglMulai.setText("Working Hour");
-        }else if (numTab.equals("1")){
-            rl.setBackgroundResource(R.drawable.familytime);
-            textTglMulai.setText("Family Time");
-        }else if (numTab.equals("2")){
-            rl.setBackgroundResource(R.drawable.familytime);
-            textTglMulai.setText("Me Time");
+        switch (numTab){
+            case "0":
+                rl.setBackgroundResource(R.drawable.working);
+                textTglMulai.setText("Working Hour");
+                break;
+            case "1":
+                rl.setBackgroundResource(R.drawable.family);
+                textTglMulai.setText("Family Time");
+                break;
+            case "2":
+                rl.setBackgroundResource(R.drawable.metime);
+                textTglMulai.setText("Me Time");
+                break;
         }
 
 
@@ -81,6 +85,7 @@ public class AmbilJam extends AppCompatActivity {
                     intentLock.putExtra("jamMulai", textJamMulai.getText());
                     intentLock.putExtra("jamSelesai", textJamSelesai.getText());
                     startActivity(intentLock);
+                    finish();
                 }
             }
         });
