@@ -12,15 +12,28 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.ngopidevteam.pranadana.metime.Model.User;
+import com.ngopidevteam.pranadana.metime.fragment.LoginFragment;
+
 import java.text.DateFormat;
 import java.util.Calendar;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AmbilJam extends AppCompatActivity {
     private TextView textTglMulai;
     private TextView textJamMulai;
     private TextView textTglSelesai;
     private TextView textJamSelesai;
+    private TextView textJenis;
     private TimePickerDialog timePicker;
+
+    String tglMulai = "";
+    String jamMulai = "";
+    String tglSelesai = "";
+    String jamSelesai = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,24 +47,28 @@ public class AmbilJam extends AppCompatActivity {
         textJamMulai = findViewById(R.id.text_jam_mulai);
         textTglSelesai = findViewById(R.id.text_tgl_selesai);
         textJamSelesai = findViewById(R.id.text_jam_selesai);
+        textJenis = findViewById(R.id.txt_jenis);
+
 
         RelativeLayout rl = findViewById(R.id.layoutAmbilJam);
 
-        switch (numTab){
+        switch (numTab) {
             case "0":
                 rl.setBackgroundResource(R.drawable.working);
                 textTglMulai.setText("Working Hour");
+                textJenis.setText("working_hour");
                 break;
             case "1":
                 rl.setBackgroundResource(R.drawable.family);
                 textTglMulai.setText("Family Time");
+                textJenis.setText("family_time");
                 break;
             case "2":
                 rl.setBackgroundResource(R.drawable.metime);
                 textTglMulai.setText("Me Time");
+                textJenis.setText("me_time");
                 break;
         }
-
 
 
         Button btnMulai = findViewById(R.id.btn_mulai);
@@ -76,17 +93,7 @@ public class AmbilJam extends AppCompatActivity {
         btnStartLock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (textTglMulai.getText().equals("") && textJamMulai.getText().equals("Pilih Waktu Mulai")){
-                    Toast.makeText(AmbilJam.this, "Silahkan Masukkan Waktu Mulai", Toast.LENGTH_SHORT).show();
-                }else if (textTglSelesai.getText().equals("") && textJamSelesai.getText().equals("Pilih Waktu Selesai")){
-                    Toast.makeText(AmbilJam.this, "Silahkan Masukkan Waktu Selesai", Toast.LENGTH_SHORT).show();
-                }else {
-                    Intent intentLock = new Intent(AmbilJam.this, LockApp.class);
-                    intentLock.putExtra("jamMulai", textJamMulai.getText());
-                    intentLock.putExtra("jamSelesai", textJamSelesai.getText());
-                    startActivity(intentLock);
-                    finish();
-                }
+                performRegister();
             }
         });
 
@@ -104,14 +111,14 @@ public class AmbilJam extends AppCompatActivity {
 
     private void openTimeSelesai() {
         Calendar calendar = Calendar.getInstance();
-        timePicker = new TimePickerDialog(this, onTimeSelesai,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
+        timePicker = new TimePickerDialog(this, onTimeSelesai, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
         timePicker.setTitle("Pilih Waktu");
         timePicker.show();
     }
 
     private void openTimeMulai() {
         Calendar calendar = Calendar.getInstance();
-        timePicker = new TimePickerDialog(this, onTimeMulai,calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
+        timePicker = new TimePickerDialog(this, onTimeMulai, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
         timePicker.setTitle("Pilih Waktu");
         timePicker.show();
     }
@@ -120,17 +127,20 @@ public class AmbilJam extends AppCompatActivity {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             Calendar calnow = Calendar.getInstance();
-            Calendar calset = (Calendar)calnow.clone();
-            calset.set(Calendar.HOUR_OF_DAY,hourOfDay);
-            calset.set(Calendar.MINUTE,minute);
-            calset.set(Calendar.SECOND,0);
-            calset.set(Calendar.MILLISECOND,0);
-            if (calset.compareTo(calnow)<=0){
-                calset.add(Calendar.DATE,1);
-            }else if (calset.compareTo(calnow)>0){
-                Log.i("hasil",">0");
+            Calendar calset = (Calendar) calnow.clone();
+            calset.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calset.set(Calendar.MINUTE, minute);
+            calset.set(Calendar.SECOND, 0);
+            calset.set(Calendar.MILLISECOND, 0);
+            if (calset.compareTo(calnow) <= 0) {
+                calset.add(Calendar.DATE,0);
+                Toast.makeText(AmbilJam.this, "Maaf, penjadwalan untuk esok hari belum tersedia", Toast.LENGTH_SHORT).show();
+
+            } else if (calset.compareTo(calnow) > 0) {
+                Log.i("hasil", ">0");
+                setJamMulai(calnow);
             }
-            setJamMulai(calset);
+
         }
     };
 
@@ -138,36 +148,81 @@ public class AmbilJam extends AppCompatActivity {
         @Override
         public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
             Calendar calnow = Calendar.getInstance();
-            Calendar calset = (Calendar)calnow.clone();
-            calset.set(Calendar.HOUR_OF_DAY,hourOfDay);
-            calset.set(Calendar.MINUTE,minute);
-            calset.set(Calendar.SECOND,0);
-            calset.set(Calendar.MILLISECOND,0);
-            if (calset.compareTo(calnow)<=0){
-                calset.add(Calendar.DATE,1);
-            }else if (calset.compareTo(calnow)>0){
-                Log.i("hasil",">0");
+            Calendar calset = (Calendar) calnow.clone();
+            calset.set(Calendar.HOUR_OF_DAY, hourOfDay);
+            calset.set(Calendar.MINUTE, minute);
+            calset.set(Calendar.SECOND, 0);
+            calset.set(Calendar.MILLISECOND, 0);
+            if (calset.compareTo(calnow) <= 0) {
+                calset.add(Calendar.DATE,0);
+                Toast.makeText(AmbilJam.this, "Maaf, penjadwalan untuk esok hari belum tersedia", Toast.LENGTH_SHORT).show();
+            } else if (calset.compareTo(calnow) > 0) {
+                Log.i("hasil", ">0");
+                setJamSelesai(calnow);
             }
-            setJamSelesai(calset);
+
         }
     };
 
     private void setJamMulai(Calendar calset) {
-        String tglMulai = "";
-        String jamMulai = "";
+
         tglMulai += DateFormat.getDateInstance(DateFormat.SHORT).format(calset.getTime());
         jamMulai += DateFormat.getTimeInstance(DateFormat.SHORT).format(calset.getTime());
-        textTglMulai.setText(""+tglMulai);
-        textJamMulai.setText(""+jamMulai);
+        textTglMulai.setText("" + tglMulai);
+        textJamMulai.setText("" + jamMulai);
     }
 
     private void setJamSelesai(Calendar calset) {
-        String tglSelesai = "";
-        String jamSelesai = "";
+
         jamSelesai += DateFormat.getTimeInstance(DateFormat.SHORT).format(calset.getTime());
         tglSelesai += DateFormat.getDateInstance(DateFormat.SHORT).format(calset.getTime());
-        textJamSelesai.setText(""+jamSelesai);
-        textTglSelesai.setText(""+tglSelesai);
+
+        textJamSelesai.setText("" + jamSelesai);
+        textTglSelesai.setText("" + tglSelesai);
     }
 
+    public void performRegister() {
+
+        String strTanggal = textTglSelesai.getText().toString();
+        String strJamMulai = textJamMulai.getText().toString();
+        String strJamSelesai = textJamSelesai.getText().toString();
+        String strJenis = textJenis.getText().toString();
+        String strUserId = LoginRegister.prefConfig.readUserId();
+
+
+        Call<User> call = LoginRegister.apiInterface.performTimeTransaction(strTanggal, strJamMulai, strJamSelesai, strJenis, strUserId);
+
+        if (textTglMulai.getText().equals("Pilih Waktu Mulai")) {
+            Toast.makeText(AmbilJam.this, "Silahkan Masukkan Waktu Mulai", Toast.LENGTH_SHORT).show();
+        } else if (textTglSelesai.getText().equals("Pilih Waktu Selesai")) {
+            Toast.makeText(AmbilJam.this, "Silahkan Masukkan Waktu Selesai", Toast.LENGTH_SHORT).show();
+        } else if (textJamMulai.getText().equals("Pilih Waktu Mulai")) {
+            Toast.makeText(AmbilJam.this, "Silahkan Masukkan Waktu Mulai", Toast.LENGTH_SHORT).show();
+        }else if (textJamSelesai.getText().equals("Pilih Waktu Selesai")) {
+            Toast.makeText(AmbilJam.this, "Silahkan Masukkan Waktu Selesai", Toast.LENGTH_SHORT).show();
+        }else{
+            call.enqueue(new Callback<User>() {
+                @Override
+                public void onResponse(Call<User> call, Response<User> response) {
+                    if (response.body().getResponse().equals("ok")) {
+                        Intent intentLock = new Intent(AmbilJam.this, LockApp.class);
+                        intentLock.putExtra("jamMulai", textJamMulai.getText());
+                        intentLock.putExtra("jamSelesai", textJamSelesai.getText());
+                        intentLock.putExtra("jenis", textJenis.getText());
+                        startActivity(intentLock);
+                        finish();
+                    } else if (response.body().getResponse().equals("exist")) {
+                        LoginRegister.prefConfig.displayToast("Username Sudah Ada");
+                    } else if (response.body().getResponse().equals("error")) {
+                        LoginRegister.prefConfig.displayToast("Gagal");
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<User> call, Throwable t) {
+
+                }
+            });
+        }
+    }
 }

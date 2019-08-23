@@ -62,7 +62,7 @@ public class HistoryWH extends Fragment {
         pd.setCancelable(false);
         pd.show();
 
-        JsonArrayRequest reqData = new JsonArrayRequest(Request.Method.POST, APIWH.urlData(LoginRegister.prefConfig.readUsername()), null,
+        JsonArrayRequest reqData = new JsonArrayRequest(Request.Method.GET, APIWH.urlData(LoginRegister.prefConfig.readUserId()), null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {

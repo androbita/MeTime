@@ -4,8 +4,8 @@ import com.ngopidevteam.pranadana.metime.LoginRegister;
 import com.ngopidevteam.pranadana.metime.R;
 
 public class APIWH {
-    public static String urlData(String username){
-        final String URL_DATA = "http://metime.ngopidevteam.com/transaksi_wh.php?username=" + username;
+    public static String urlData(String id){
+        final String URL_DATA = "http://metime.ngopidevteam.com/transaksi_wh.php?id=" + id;
         return URL_DATA;
     }
 

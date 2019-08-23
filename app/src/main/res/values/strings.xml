@@ -29,4 +29,5 @@
     <string name="pref_file">com.ngopidevteam.pranadana.preference_file</string>
     <string name="pref_login_status">com.ngopidevteam.pranadana.preference_login_status</string>
     <string name="pref_username">com.ngopidevteam.pranadana.preference_username</string>
+    <string name="pref_user_id">com.ngopidevteam.pranadana.preference_user_id</string>
 </resources>

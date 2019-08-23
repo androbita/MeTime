@@ -18,6 +18,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.ngopidevteam.pranadana.metime.Adapter.AdapterDataFT;
+import com.ngopidevteam.pranadana.metime.LoginRegister;
 import com.ngopidevteam.pranadana.metime.Model.ModelData;
 import com.ngopidevteam.pranadana.metime.R;
 import com.ngopidevteam.pranadana.metime.Util.APIFT;
@@ -61,7 +62,7 @@ public class HistoryFT extends Fragment {
         pd.setCancelable(false);
         pd.show();
 
-        JsonArrayRequest reqData = new JsonArrayRequest(Request.Method.POST, APIFT.URL_DATA, null,
+        JsonArrayRequest reqData = new JsonArrayRequest(Request.Method.GET, APIFT.urlData(LoginRegister.prefConfig.readUserId()), null,
                 new Response.Listener<JSONArray>() {
                     @Override
                     public void onResponse(JSONArray response) {
