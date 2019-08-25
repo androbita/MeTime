@@ -34,7 +34,7 @@
         android:layout_below="@id/text_jam_mulai"
         android:layout_centerHorizontal="true"
         android:background="@android:color/darker_gray"
-        android:text="Open Time" />
+        android:text="Get Time" />
 
 
     <TextView

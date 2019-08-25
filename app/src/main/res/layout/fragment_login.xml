@@ -50,13 +50,30 @@
         android:layout_marginTop="20dp"
         />
 
-
-    <TextView
-        android:id="@+id/text_register"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Pengguna baru ? Daftar sekarang"
+        android:orientation="horizontal"
         android:layout_gravity="center_horizontal"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="50dp">
+
+        <TextView
+            android:id="@+id/text_register_awal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Pengguna baru ?"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"/>
+
+        <TextView
+            android:id="@+id/text_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Daftar sekarang"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="50dp"
+            android:layout_marginLeft="5dp"
+            android:textColor="@android:color/holo_blue_dark"/>
+    </LinearLayout>
 
 </LinearLayout>

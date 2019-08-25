@@ -16,7 +16,9 @@ import com.ngopidevteam.pranadana.metime.Model.User;
 import com.ngopidevteam.pranadana.metime.fragment.LoginFragment;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -93,7 +95,7 @@ public class AmbilJam extends AppCompatActivity {
         btnStartLock.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                performRegister();
+                performStartLock();
             }
         });
 
@@ -110,6 +112,8 @@ public class AmbilJam extends AppCompatActivity {
     }
 
     private void openTimeSelesai() {
+        textTglSelesai.setText(null);
+        textJamSelesai.setText("Pilih Waktu Selesai");
         Calendar calendar = Calendar.getInstance();
         timePicker = new TimePickerDialog(this, onTimeSelesai, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
         timePicker.setTitle("Pilih Waktu");
@@ -117,10 +121,21 @@ public class AmbilJam extends AppCompatActivity {
     }
 
     private void openTimeMulai() {
+        textTglMulai.setText(null);
+        textJamMulai.setText("Pilih Waktu Mulai");
         Calendar calendar = Calendar.getInstance();
-        timePicker = new TimePickerDialog(this, onTimeMulai, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
-        timePicker.setTitle("Pilih Waktu");
-        timePicker.show();
+        Calendar calset = (Calendar) calendar.clone();
+//        timePicker = new TimePickerDialog(this, onTimeMulai, calendar.get(Calendar.HOUR_OF_DAY), calendar.get(Calendar.MINUTE), true);
+//        timePicker.setTitle("Pilih Waktu");
+//        timePicker.show();
+        Date c = calset.getTime();
+//        long m = calset.getTimeInMillis();
+//        Date minute = new Date(m + (10 * 6000) );
+
+        SimpleDateFormat df = new SimpleDateFormat("dd/MM/yy");
+        SimpleDateFormat dt = new SimpleDateFormat("HH.mm");
+        textTglMulai.setText(df.format(c));
+        textJamMulai.setText(dt.format(c));
     }
 
     TimePickerDialog.OnTimeSetListener onTimeMulai = new TimePickerDialog.OnTimeSetListener() {
@@ -133,14 +148,14 @@ public class AmbilJam extends AppCompatActivity {
             calset.set(Calendar.SECOND, 0);
             calset.set(Calendar.MILLISECOND, 0);
             if (calset.compareTo(calnow) <= 0) {
-                calset.add(Calendar.DATE,0);
+//                calset.add(Calendar.DATE,0);
                 Toast.makeText(AmbilJam.this, "Maaf, penjadwalan untuk esok hari belum tersedia", Toast.LENGTH_SHORT).show();
 
             } else if (calset.compareTo(calnow) > 0) {
                 Log.i("hasil", ">0");
-                setJamMulai(calnow);
+                setJamMulai(calset);
             }
-
+//            setJamMulai(calnow);
         }
     };
 
@@ -154,11 +169,11 @@ public class AmbilJam extends AppCompatActivity {
             calset.set(Calendar.SECOND, 0);
             calset.set(Calendar.MILLISECOND, 0);
             if (calset.compareTo(calnow) <= 0) {
-                calset.add(Calendar.DATE,0);
+//                calset.add(Calendar.DATE,0);
                 Toast.makeText(AmbilJam.this, "Maaf, penjadwalan untuk esok hari belum tersedia", Toast.LENGTH_SHORT).show();
             } else if (calset.compareTo(calnow) > 0) {
                 Log.i("hasil", ">0");
-                setJamSelesai(calnow);
+                setJamSelesai(calset);
             }
 
         }
@@ -166,22 +181,23 @@ public class AmbilJam extends AppCompatActivity {
 
     private void setJamMulai(Calendar calset) {
 
-        tglMulai += DateFormat.getDateInstance(DateFormat.SHORT).format(calset.getTime());
-        jamMulai += DateFormat.getTimeInstance(DateFormat.SHORT).format(calset.getTime());
+        tglMulai = DateFormat.getDateInstance(DateFormat.SHORT).format(calset.getTime());
+        jamMulai = DateFormat.getTimeInstance(DateFormat.SHORT).format(calset.getTime());
+
         textTglMulai.setText("" + tglMulai);
         textJamMulai.setText("" + jamMulai);
     }
 
     private void setJamSelesai(Calendar calset) {
 
-        jamSelesai += DateFormat.getTimeInstance(DateFormat.SHORT).format(calset.getTime());
-        tglSelesai += DateFormat.getDateInstance(DateFormat.SHORT).format(calset.getTime());
+        jamSelesai = DateFormat.getTimeInstance(DateFormat.SHORT).format(calset.getTime());
+        tglSelesai = DateFormat.getDateInstance(DateFormat.SHORT).format(calset.getTime());
 
         textJamSelesai.setText("" + jamSelesai);
         textTglSelesai.setText("" + tglSelesai);
     }
 
-    public void performRegister() {
+    public void performStartLock() {
 
         String strTanggal = textTglSelesai.getText().toString();
         String strJamMulai = textJamMulai.getText().toString();
@@ -200,6 +216,8 @@ public class AmbilJam extends AppCompatActivity {
             Toast.makeText(AmbilJam.this, "Silahkan Masukkan Waktu Mulai", Toast.LENGTH_SHORT).show();
         }else if (textJamSelesai.getText().equals("Pilih Waktu Selesai")) {
             Toast.makeText(AmbilJam.this, "Silahkan Masukkan Waktu Selesai", Toast.LENGTH_SHORT).show();
+        }else if (textJamMulai.getText().equals(textJamSelesai.getText())){
+            Toast.makeText(AmbilJam.this, "Waktu mulai dan Waktu Selesai tidak boleh sama", Toast.LENGTH_SHORT).show();
         }else{
             call.enqueue(new Callback<User>() {
                 @Override

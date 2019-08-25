@@ -59,14 +59,16 @@ public class LockApp extends Activity {
                                 String jamDua = jamJalan.getText().toString();
 
                                 if (jamSatu.equalsIgnoreCase(jamDua)){
+                                    onDestroy();
                                     Intent intent = new Intent(LockApp.this, History.class);
                                     startActivity(intent);
+                                    finish();
                                     KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
                                     final KeyguardManager.KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
                                     lock.reenableKeyguard();
-                                    Toast.makeText(LockApp.this, "Anda Berhenti", Toast.LENGTH_SHORT).show();
+//                                    Toast.makeText(LockApp.this, "Anda Berhenti", Toast.LENGTH_SHORT).show();
                                     btnCancel.setEnabled(true);
-                                    finish();
+
                                 }
                             }
                         });
@@ -104,7 +106,6 @@ public class LockApp extends Activity {
                 KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
                 final KeyguardManager.KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
                 lock.reenableKeyguard();
-                Toast.makeText(LockApp.this, "Anda Berhenti", Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -112,6 +113,11 @@ public class LockApp extends Activity {
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        onDestroy();
+        Intent intent = new Intent(this, LockApp.class);
+        intent.putExtra("jamMulai", jamMulai.getText());
+        intent.putExtra("jamSelesai", jamSelesai.getText());
+        startActivity(intent);
         return false;
     }
 
@@ -122,18 +128,18 @@ public class LockApp extends Activity {
             if (btnCancel.isClickable()) {
                 Intent intent = new Intent(LockApp.this, History.class);
                 startActivity(intent);
+                finish();
                 KeyguardManager keyguardManager = (KeyguardManager) getSystemService(Activity.KEYGUARD_SERVICE);
                 final KeyguardManager.KeyguardLock lock = keyguardManager.newKeyguardLock(KEYGUARD_SERVICE);
                 lock.reenableKeyguard();
             }
         }else {
+            onDestroy();
             Intent intent = new Intent(this, LockApp.class);
             intent.putExtra("jamMulai", jamMulai.getText());
             intent.putExtra("jamSelesai", jamSelesai.getText());
             startActivity(intent);
-            finish();
-            Toast.makeText(this, "Anda Menekan Tombol Home", Toast.LENGTH_SHORT).show();
-        super.onUserLeaveHint();
+            super.onUserLeaveHint();
         }
     }
 
@@ -145,6 +151,7 @@ public class LockApp extends Activity {
 
     @Override
     protected void onPause() {
+        onDestroy();
         super.onPause();
         ActivityManager activityManager = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
         activityManager.moveTaskToFront(getTaskId(), 0);
